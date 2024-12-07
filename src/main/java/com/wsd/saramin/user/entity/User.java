@@ -1,11 +1,14 @@
 package com.wsd.saramin.user.entity;
 
+import com.wsd.saramin.job.entity.Job;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "`user`")
 @Entity
@@ -45,6 +48,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Job> job = new ArrayList<>();
 
     public enum Gender {
         MALE,
