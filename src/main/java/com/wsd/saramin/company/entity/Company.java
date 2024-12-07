@@ -1,8 +1,12 @@
 package com.wsd.saramin.company.entity;
 
+import com.wsd.saramin.job.entity.Job;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "company")
 @Entity
@@ -46,4 +50,7 @@ public class Company {
 
     @Column(nullable = false)
     private long salary;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Job> jobs = new ArrayList<>();
 }
