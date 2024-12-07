@@ -40,7 +40,7 @@ public class Job {
     private String sector;
 
     @Column(nullable = false)
-    private long view;
+    private long view = 0;
 
     @CreationTimestamp
     private LocalDateTime date;
