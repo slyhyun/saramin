@@ -1,10 +1,12 @@
 package com.wsd.saramin.user.dto;
 
+import com.wsd.saramin.job.dto.JobDTO;
 import com.wsd.saramin.user.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,9 +20,10 @@ public class UserDTO {
     private User.Gender gender;
     private User.Role role;
     private LocalDateTime register;
+    private List<JobDTO> jobs;
 
     // Entity => DTO 변환 생성자
-    public UserDTO(User user) {
+    public UserDTO(User user, List<JobDTO> jobDTOs) {
         this.userId = user.getUserId();
         this.email = user.getEmail();
         this.name = user.getName();
@@ -30,5 +33,6 @@ public class UserDTO {
         this.gender = user.getGender();
         this.role = user.getRole();
         this.register = user.getRegister();
+        this.jobs = jobDTOs;
     }
 }
