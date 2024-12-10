@@ -3,7 +3,7 @@ package com.wsd.saramin.user.service;
 import com.wsd.saramin.user.dto.LoginDTO;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.user.repository.UserRepository;
-import com.wsd.saramin.security.JwtTokenProvider;
+import com.wsd.saramin.config.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
