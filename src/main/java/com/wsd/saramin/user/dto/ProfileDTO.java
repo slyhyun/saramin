@@ -1,6 +1,6 @@
 package com.wsd.saramin.user.dto;
 
-import com.wsd.saramin.job.dto.JobDTO;
+import com.wsd.saramin.job.dto.JobSummaryDTO;
 import com.wsd.saramin.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -38,5 +38,5 @@ public class ProfileDTO {
     @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
     private String password; // 비밀번호 변경 시 사용
 
-    private List<JobDTO> appliedJobs; // 신청한 Job 목록
+    private List<JobSummaryDTO> appliedJobs;
 }
