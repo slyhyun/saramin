@@ -1,6 +1,6 @@
 package com.wsd.saramin.company.dto;
 
-import com.wsd.saramin.job.dto.JobDTO;
+import com.wsd.saramin.job.dto.JobSummaryDTO;
 import com.wsd.saramin.company.entity.Company;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,10 +22,10 @@ public class CompanyDTO {
     private String establishment;
     private long revenue;
     private long salary;
-    private List<JobDTO> jobs;
+    private List<JobSummaryDTO> jobs; // 간소화된 Job 정보
 
     // Entity => DTO 변환 생성자
-    public CompanyDTO(Company company, List<JobDTO> jobDTOs) {
+    public CompanyDTO(Company company, List<JobSummaryDTO> jobSummaryDTOs) {
         this.companyId = company.getCompanyId();
         this.name = company.getName();
         this.type = company.getType();
@@ -38,6 +38,6 @@ public class CompanyDTO {
         this.establishment = company.getEstablishment();
         this.revenue = company.getRevenue();
         this.salary = company.getSalary();
-        this.jobs = jobDTOs; // JobDTO 리스트를 할당
+        this.jobs = jobSummaryDTOs; // JobSummaryDTO 리스트를 할당
     }
 }
