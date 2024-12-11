@@ -3,7 +3,7 @@ package com.wsd.saramin.company.service;
 import com.wsd.saramin.company.dto.CompanyDTO;
 import com.wsd.saramin.company.entity.Company;
 import com.wsd.saramin.company.repository.CompanyRepository;
-import com.wsd.saramin.job.dto.JobDTO;
+import com.wsd.saramin.job.dto.JobSummaryDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class CompanyService {
         return new CompanyDTO(
                 company,
                 company.getJobs().stream()
-                        .map(JobDTO::new) // Job -> JobDTO 변환
+                        .map(JobSummaryDTO::new) // Job -> JobSummaryDTO 변환
                         .collect(Collectors.toList())
         );
     }
