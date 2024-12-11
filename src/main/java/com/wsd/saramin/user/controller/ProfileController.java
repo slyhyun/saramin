@@ -16,6 +16,14 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
+    // 프로필 조회
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileDTO> getProfile(@RequestParam Long userId) {
+        ProfileDTO profile = profileService.getProfile(userId);
+        return ResponseEntity.ok(profile);
+    }
+
+    // 프로필 수정
     @PutMapping("/profile")
     public ResponseEntity<String> updateProfile(
             @RequestParam Long userId, @Valid @RequestBody ProfileDTO profileDTO) {
