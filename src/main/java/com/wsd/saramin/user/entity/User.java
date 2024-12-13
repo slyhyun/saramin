@@ -1,5 +1,6 @@
 package com.wsd.saramin.user.entity;
 
+import com.wsd.saramin.apply.entity.Apply;
 import com.wsd.saramin.job.entity.Job;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -51,6 +52,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> job = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Apply> apply = new ArrayList<>(); // 사용자 지원 내역
 
     public enum Gender {
         MALE,

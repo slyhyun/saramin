@@ -1,5 +1,6 @@
 package com.wsd.saramin.user.dto;
 
+import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.job.dto.JobDTO;
 import com.wsd.saramin.user.entity.User;
 import lombok.Getter;
@@ -21,9 +22,11 @@ public class UserDTO {
     private User.Role role;
     private LocalDateTime register;
     private List<JobDTO> jobs;
+    private List<ApplyDTO> applies; // 사용자 지원 내역 DTO
+
 
     // Entity => DTO 변환 생성자
-    public UserDTO(User user, List<JobDTO> jobDTOs) {
+    public UserDTO(User user, List<JobDTO> jobDTOs, List<ApplyDTO> applyDTOs) {
         this.userId = user.getUserId();
         this.email = user.getEmail();
         this.name = user.getName();
@@ -34,5 +37,6 @@ public class UserDTO {
         this.role = user.getRole();
         this.register = user.getRegister();
         this.jobs = jobDTOs;
+        this.applies = applyDTOs;
     }
 }

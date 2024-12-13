@@ -1,5 +1,6 @@
 package com.wsd.saramin.job.dto;
 
+import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.company.entity.Company;
 import com.wsd.saramin.job.entity.Job;
 import com.wsd.saramin.user.entity.User;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,9 +26,10 @@ public class JobDTO {
 
     private String companyName; // Company 이름만 포함
     private String userName;    // User 이름만 포함
+    private List<ApplyDTO> applies; // Job에 지원한 내역 추가
 
     // Entity → DTO 변환 생성자
-    public JobDTO(Job job) {
+    public JobDTO(Job job, List<ApplyDTO> applyDTOs) {
         this.jobId = job.getJobId();
         this.title = job.getTitle();
         this.location = job.getLocation();
@@ -40,6 +43,7 @@ public class JobDTO {
 
         this.companyName = job.getCompany().getName();
         this.userName = job.getUser().getName();
+        this.applies = applyDTOs; // 지원 내역 리스트 추가
     }
 
     // DTO → Entity 변환 메서드

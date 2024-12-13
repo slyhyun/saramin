@@ -1,5 +1,6 @@
 package com.wsd.saramin.job.entity;
 
+import com.wsd.saramin.apply.entity.Apply;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.company.entity.Company;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "job")
 @Entity
@@ -52,4 +55,7 @@ public class Job {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Apply> apply = new ArrayList<>(); // 채용 공고에 대한 지원 내역
 }
