@@ -2,9 +2,10 @@ package com.wsd.saramin.user.controller;
 
 import com.wsd.saramin.user.dto.ProfileDTO;
 import com.wsd.saramin.user.service.ProfileService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,5 +30,19 @@ public class ProfileController {
             @RequestParam Long userId, @Valid @RequestBody ProfileDTO profileDTO) {
         profileService.updateProfile(userId, profileDTO);
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
+    }
+
+    // Job 북마크 삭제
+    @DeleteMapping("/profile/bookmark/job/{jobBookmarkId}")
+    public ResponseEntity<String> deleteJobBookmark(@RequestParam Long userId, @PathVariable Long jobBookmarkId) {
+        profileService.deleteJobBookmark(userId, jobBookmarkId);
+        return ResponseEntity.ok("Job 북마크가 삭제되었습니다.");
+    }
+
+    // Company 북마크 삭제
+    @DeleteMapping("/profile/bookmark/company/{companyBookmarkId}")
+    public ResponseEntity<String> deleteCompanyBookmark(@RequestParam Long userId, @PathVariable Long companyBookmarkId) {
+        profileService.deleteCompanyBookmark(userId, companyBookmarkId);
+        return ResponseEntity.ok("Company 북마크가 삭제되었습니다.");
     }
 }

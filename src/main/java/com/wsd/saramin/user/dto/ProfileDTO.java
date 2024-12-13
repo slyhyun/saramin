@@ -1,5 +1,6 @@
 package com.wsd.saramin.user.dto;
 
+import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.bookmark.job.dto.JobBookmarkDTO;
 import com.wsd.saramin.bookmark.company.dto.CompanyBookmarkDTO;
 import com.wsd.saramin.user.entity.User;
@@ -37,8 +38,9 @@ public class ProfileDTO {
     private User.Gender gender;
 
     @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
-    private String password;
+    private String password; // 비밀번호 변경 시 사용
 
+    private List<ApplyDTO> appliedJobs; // 지원 내역
     private List<JobBookmarkDTO> jobBookmarks; // Job 북마크
     private List<CompanyBookmarkDTO> companyBookmarks; // Company 북마크
 }
