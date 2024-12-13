@@ -1,4 +1,4 @@
-package com.wsd.saramin.application.entity;
+package com.wsd.saramin.apply.entity;
 
 import com.wsd.saramin.job.entity.Job;
 import com.wsd.saramin.user.entity.User;
@@ -9,15 +9,15 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Table(name = "application")
+@Table(name = "apply")
 @Entity
 @Getter
 @Setter
-public class Application {
+public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "application_id")
-    private long applicationId;
+    @Column(name = "apply_id")
+    private long applyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
