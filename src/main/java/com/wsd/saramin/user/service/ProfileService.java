@@ -2,8 +2,10 @@ package com.wsd.saramin.user.service;
 
 import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.apply.repository.ApplyRepository;
+import com.wsd.saramin.bookmark.company.dto.CompanyBookmarkDTO;
 import com.wsd.saramin.bookmark.company.entity.CompanyBookmark;
 import com.wsd.saramin.bookmark.company.repository.CompanyBookmarkRepository;
+import com.wsd.saramin.bookmark.job.dto.JobBookmarkDTO;
 import com.wsd.saramin.bookmark.job.entity.JobBookmark;
 import com.wsd.saramin.bookmark.job.repository.JobBookmarkRepository;
 import com.wsd.saramin.user.dto.ProfileDTO;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,6 +89,36 @@ public class ProfileService {
         companyBookmarkRepository.delete(companyBookmark);
     }
 
+    // Job 북마크 조회
+    @Transactional(readOnly = true)
+    public List<JobBookmarkDTO> getJobBookmarks(Long userId) {
+        User user = findUserById(userId);
+
+        return jobBookmarkRepository.findByUser(user).stream()
+                .map(JobBookmarkDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // Company 북마크 조회
+    @Transactional(readOnly = true)
+    public List<CompanyBookmarkDTO> getCompanyBookmarks(Long userId) {
+        User user = findUserById(userId);
+
+        return companyBookmarkRepository.findByUser(user).stream()
+                .map(CompanyBookmarkDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // Apply한 Job 조회
+    @Transactional(readOnly = true)
+    public List<ApplyDTO> getAppliedJobs(Long userId) {
+        User user = findUserById(userId);
+
+        return applyRepository.findAllByUser(user).stream()
+                .map(ApplyDTO::new)
+                .collect(Collectors.toList());
+    }
+
     // User 엔티티에서 ProfileDTO로 매핑
     private ProfileDTO mapToProfileDTO(User user) {
         ProfileDTO profileDTO = new ProfileDTO();
@@ -95,13 +128,31 @@ public class ProfileService {
         profileDTO.setRegion(user.getRegion());
         profileDTO.setAge(user.getAge());
         profileDTO.setGender(user.getGender());
+
+        // 지원 내역 매핑
         profileDTO.setAppliedJobs(
                 applyRepository.findAllByUser(user).stream()
-                        .map(ApplyDTO::new)
+                        .map(ApplyDTO::new) // Apply -> ApplyDTO 변환
                         .collect(Collectors.toList())
         );
+
+        // Job 북마크 매핑
+        profileDTO.setJobBookmarks(
+                jobBookmarkRepository.findByUser(user).stream()
+                        .map(JobBookmarkDTO::new) // JobBookmark -> JobBookmarkDTO 변환
+                        .collect(Collectors.toList())
+        );
+
+        // Company 북마크 매핑
+        profileDTO.setCompanyBookmarks(
+                companyBookmarkRepository.findByUser(user).stream()
+                        .map(CompanyBookmarkDTO::new) // CompanyBookmark -> CompanyBookmarkDTO 변환
+                        .collect(Collectors.toList())
+        );
+
         return profileDTO;
     }
+
 
     // 업데이트 로직 분리
     private void updateUserFields(User user, ProfileDTO profileDTO) {
