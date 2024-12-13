@@ -14,6 +14,7 @@ public interface CompanyBookmarkRepository extends JpaRepository<CompanyBookmark
     boolean existsByUserAndCompany(User user, Company company);
 
     List<CompanyBookmark> findByUser(User user);
+    List<CompanyBookmark> findByCompany(Company company);
 
     @Modifying
     @Transactional

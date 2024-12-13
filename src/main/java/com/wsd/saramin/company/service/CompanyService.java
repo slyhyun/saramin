@@ -1,5 +1,7 @@
 package com.wsd.saramin.company.service;
 
+import com.wsd.saramin.bookmark.company.dto.CompanyBookmarkDTO;
+import com.wsd.saramin.bookmark.company.repository.CompanyBookmarkRepository;
 import com.wsd.saramin.company.dto.CompanyDTO;
 import com.wsd.saramin.company.entity.Company;
 import com.wsd.saramin.company.repository.CompanyRepository;
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final CompanyBookmarkRepository companyBookmarkRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository, CompanyBookmarkRepository companyBookmarkRepository) {
         this.companyRepository = companyRepository;
+        this.companyBookmarkRepository = companyBookmarkRepository;
     }
 
     // 회사 정보 조회
@@ -24,12 +28,15 @@ public class CompanyService {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new IllegalArgumentException("회사를 찾을 수 없습니다."));
 
-        return new CompanyDTO(
-                company,
-                company.getJobs().stream()
-                        .map(JobSummaryDTO::new) // Job -> JobSummaryDTO 변환
-                        .collect(Collectors.toList())
-        );
+        var jobSummaries = company.getJobs().stream()
+                .map(JobSummaryDTO::new) // Job -> JobSummaryDTO 변환
+                .collect(Collectors.toList());
+
+        var companyBookmarks = companyBookmarkRepository.findByCompany(company).stream()
+                .map(CompanyBookmarkDTO::new) // CompanyBookmark -> CompanyBookmarkDTO 변환
+                .collect(Collectors.toList());
+
+        return new CompanyDTO(company, jobSummaries, companyBookmarks);
     }
 
     // 회사 정보 수정

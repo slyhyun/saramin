@@ -1,5 +1,6 @@
 package com.wsd.saramin.company.entity;
 
+import com.wsd.saramin.bookmark.company.entity.CompanyBookmark;
 import com.wsd.saramin.job.entity.Job;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,4 +54,7 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> jobs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CompanyBookmark> companyBookmarks = new ArrayList<>(); // Company 북마크
 }

@@ -1,6 +1,7 @@
 package com.wsd.saramin.job.entity;
 
 import com.wsd.saramin.apply.entity.Apply;
+import com.wsd.saramin.bookmark.job.entity.JobBookmark;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.company.entity.Company;
 import jakarta.persistence.*;
@@ -58,4 +59,7 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Apply> apply = new ArrayList<>(); // 채용 공고에 대한 지원 내역
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobBookmark> jobBookmarks = new ArrayList<>(); // Job 북마크
 }

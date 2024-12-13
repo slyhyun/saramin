@@ -13,6 +13,7 @@ import java.util.List;
 public interface JobBookmarkRepository extends JpaRepository<JobBookmark, Long> {
     boolean existsByUserAndJob(User user, Job job);
     List<JobBookmark> findByUser(User user);
+    List<JobBookmark> findByJob(Job job);
 
     @Modifying
     @Transactional

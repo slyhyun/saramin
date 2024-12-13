@@ -1,12 +1,15 @@
 package com.wsd.saramin.user.dto;
 
 import com.wsd.saramin.apply.dto.ApplyDTO;
+import com.wsd.saramin.bookmark.company.dto.CompanyBookmarkDTO;
+import com.wsd.saramin.bookmark.job.dto.JobBookmarkDTO;
 import com.wsd.saramin.job.dto.JobDTO;
 import com.wsd.saramin.user.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,10 +26,13 @@ public class UserDTO {
     private LocalDateTime register;
     private List<JobDTO> jobs;
     private List<ApplyDTO> applies; // 사용자 지원 내역 DTO
+    private List<JobBookmarkDTO> jobBookmarks; // Job 북마크 목록
+    private List<CompanyBookmarkDTO> companyBookmarks; // Company 북마크 목록
 
 
     // Entity => DTO 변환 생성자
-    public UserDTO(User user, List<JobDTO> jobDTOs, List<ApplyDTO> applyDTOs) {
+    public UserDTO(User user, List<JobDTO> jobDTOs, List<ApplyDTO> applyDTOs,
+                   List<JobBookmarkDTO> jobBookmarkDTOs, List<CompanyBookmarkDTO> companyBookmarkDTOs) {
         this.userId = user.getUserId();
         this.email = user.getEmail();
         this.name = user.getName();
@@ -38,5 +44,7 @@ public class UserDTO {
         this.register = user.getRegister();
         this.jobs = jobDTOs;
         this.applies = applyDTOs;
+        this.jobBookmarks = jobBookmarkDTOs;
+        this.companyBookmarks = companyBookmarkDTOs;
     }
 }

@@ -2,6 +2,8 @@ package com.wsd.saramin.job.service;
 
 import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.apply.repository.ApplyRepository;
+import com.wsd.saramin.bookmark.job.dto.JobBookmarkDTO;
+import com.wsd.saramin.bookmark.job.repository.JobBookmarkRepository;
 import com.wsd.saramin.job.dto.JobDTO;
 import com.wsd.saramin.job.entity.Job;
 import com.wsd.saramin.job.repository.JobRepository;
@@ -16,22 +18,26 @@ import java.util.stream.Collectors;
 public class JobService {
 
     private final JobRepository jobRepository;
-    private final ApplyRepository applyRepository; // ApplyRepository 추가
+    private final ApplyRepository applyRepository;
+    private final JobBookmarkRepository jobBookmarkRepository; // 추가
 
-    public JobService(JobRepository jobRepository, ApplyRepository applyRepository) {
+    public JobService(JobRepository jobRepository, ApplyRepository applyRepository, JobBookmarkRepository jobBookmarkRepository) {
         this.jobRepository = jobRepository;
         this.applyRepository = applyRepository;
+        this.jobBookmarkRepository = jobBookmarkRepository; // 추가
     }
 
     // 채용 공고 목록 조회 (페이지네이션, 필터링, 정렬)
     public Page<JobDTO> getJobs(String location, String experience, String sector, String keyword, Pageable pageable) {
         return jobRepository.findAll(pageable)
                 .map(job -> {
-                    // Job에 연결된 Apply 데이터 가져오기
                     var applyDTOs = applyRepository.findAllByJob(job).stream()
                             .map(ApplyDTO::new)
                             .collect(Collectors.toList());
-                    return new JobDTO(job, applyDTOs);
+                    var jobBookmarkDTOs = jobBookmarkRepository.findByJob(job).stream()
+                            .map(JobBookmarkDTO::new)
+                            .collect(Collectors.toList());
+                    return new JobDTO(job, applyDTOs, jobBookmarkDTOs);
                 });
     }
 
@@ -42,15 +48,18 @@ public class JobService {
         var applyDTOs = applyRepository.findAllByJob(job).stream()
                 .map(ApplyDTO::new)
                 .collect(Collectors.toList());
-        return new JobDTO(job, applyDTOs);
+        var jobBookmarkDTOs = jobBookmarkRepository.findByJob(job).stream()
+                .map(JobBookmarkDTO::new)
+                .collect(Collectors.toList());
+        return new JobDTO(job, applyDTOs, jobBookmarkDTOs);
     }
 
     // 채용 공고 등록
     @Transactional
     public JobDTO createJob(JobDTO jobDTO) {
-        Job job = jobDTO.toEntity(null, null); // Company와 User는 추가 로직으로 설정
+        Job job = jobDTO.toEntity(null, null);
         Job savedJob = jobRepository.save(job);
-        return new JobDTO(savedJob, null); // 새 공고는 아직 Apply 내역이 없으므로 null 전달
+        return new JobDTO(savedJob, null, null); // Apply와 Bookmark 내역은 새 공고에는 없음
     }
 
     // 채용 공고 수정
@@ -69,7 +78,10 @@ public class JobService {
         var applyDTOs = applyRepository.findAllByJob(updatedJob).stream()
                 .map(ApplyDTO::new)
                 .collect(Collectors.toList());
-        return new JobDTO(updatedJob, applyDTOs);
+        var jobBookmarkDTOs = jobBookmarkRepository.findByJob(updatedJob).stream()
+                .map(JobBookmarkDTO::new)
+                .collect(Collectors.toList());
+        return new JobDTO(updatedJob, applyDTOs, jobBookmarkDTOs);
     }
 
     // 채용 공고 삭제
