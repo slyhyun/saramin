@@ -1,6 +1,7 @@
 package com.wsd.saramin.user.service;
 
-import com.wsd.saramin.job.dto.JobSummaryDTO;
+import com.wsd.saramin.apply.dto.ApplyDTO;
+import com.wsd.saramin.apply.repository.ApplyRepository;
 import com.wsd.saramin.user.dto.ProfileDTO;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.user.repository.UserRepository;
@@ -14,10 +15,12 @@ import java.util.stream.Collectors;
 public class ProfileService {
 
     private final UserRepository userRepository;
+    private final ApplyRepository applyRepository; // ApplyRepository 추가
     private final PasswordEncoder passwordEncoder;
 
-    public ProfileService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public ProfileService(UserRepository userRepository, ApplyRepository applyRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.applyRepository = applyRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,8 +54,8 @@ public class ProfileService {
         profileDTO.setAge(user.getAge());
         profileDTO.setGender(user.getGender());
         profileDTO.setAppliedJobs(
-                user.getJob().stream()
-                        .map(JobSummaryDTO::new) // Job -> JobSummaryDTO 변환
+                applyRepository.findAllByUser(user).stream() // Apply 리스트 가져오기
+                        .map(ApplyDTO::new) // Apply -> ApplyDTO 변환
                         .collect(Collectors.toList())
         );
         return profileDTO;
