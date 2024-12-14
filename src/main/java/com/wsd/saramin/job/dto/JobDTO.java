@@ -29,9 +29,10 @@ public class JobDTO {
     private String userName;    // User 이름만 포함
     private List<ApplyDTO> applies; // Job에 지원한 내역 추가
     private List<JobBookmarkDTO> jobBookmarks; // Job 북마크 목록
+    private List<JobReviewDTO> jobReviews; // Job 리뷰 목록 추가
 
     // Entity → DTO 변환 생성자
-    public JobDTO(Job job, List<ApplyDTO> applyDTOs, List<JobBookmarkDTO> jobBookmarkDTOs) {
+    public JobDTO(Job job, List<ApplyDTO> applyDTOs, List<JobBookmarkDTO> jobBookmarkDTOs, List<JobReviewDTO> jobReviewDTOs) {
         this.jobId = job.getJobId();
         this.title = job.getTitle();
         this.location = job.getLocation();
@@ -47,6 +48,7 @@ public class JobDTO {
         this.userName = job.getUser().getName();
         this.applies = applyDTOs;
         this.jobBookmarks = jobBookmarkDTOs;
+        this.jobReviews = jobReviewDTOs; // 리뷰 추가
     }
 
     // DTO → Entity 변환 메서드
