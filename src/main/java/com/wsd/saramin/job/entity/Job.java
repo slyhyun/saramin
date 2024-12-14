@@ -2,8 +2,8 @@ package com.wsd.saramin.job.entity;
 
 import com.wsd.saramin.apply.entity.Apply;
 import com.wsd.saramin.bookmark.job.entity.JobBookmark;
-import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.company.entity.Company;
+import com.wsd.saramin.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,16 +54,31 @@ public class Job {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
+    @Column(name = "company_name", nullable = false)
+    private String companyName; // 직접 저장된 회사 이름
+
+    @Column
+    private String link; // 공고 링크
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Apply> apply = new ArrayList<>(); // 채용 공고에 대한 지원 내역
+    private List<Apply> apply = new ArrayList<>();
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JobBookmark> jobBookmarks = new ArrayList<>(); // Job 북마크
+    private List<JobBookmark> jobBookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JobReview> jobReviews = new ArrayList<>(); // Job 리뷰
+    private List<JobReview> jobReviews = new ArrayList<>();
+
+    // 회사 이름을 설정하는 메서드
+    @PrePersist
+    @PreUpdate
+    public void updateCompanyName() {
+        if (this.company != null) {
+            this.companyName = this.company.getName();
+        }
+    }
 }

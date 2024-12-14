@@ -25,8 +25,9 @@ public class JobDTO {
     private long view;
     private LocalDateTime date;
 
-    private String companyName; // Company 이름만 포함
-    private String userName;    // User 이름만 포함
+    private String companyName; // 회사 이름
+    private String userName;    // 사용자 이름
+    private String link;        // 공고 링크
     private List<ApplyDTO> applies; // Job에 지원한 내역 추가
     private List<JobBookmarkDTO> jobBookmarks; // Job 북마크 목록
     private List<JobReviewDTO> jobReviews; // Job 리뷰 목록 추가
@@ -44,11 +45,13 @@ public class JobDTO {
         this.view = job.getView();
         this.date = job.getDate();
 
-        this.companyName = job.getCompany().getName();
-        this.userName = job.getUser().getName();
+        this.companyName = job.getCompanyName(); // 엔티티에서 직접 저장된 회사 이름 사용
+        this.userName = job.getUser() != null ? job.getUser().getName() : null;
+        this.link = job.getLink(); // 링크 추가
+
         this.applies = applyDTOs;
         this.jobBookmarks = jobBookmarkDTOs;
-        this.jobReviews = jobReviewDTOs; // 리뷰 추가
+        this.jobReviews = jobReviewDTOs;
     }
 
     // DTO → Entity 변환 메서드
@@ -61,6 +64,7 @@ public class JobDTO {
         job.setEducation(this.education);
         job.setDeadline(this.deadline);
         job.setSector(this.sector);
+        job.setLink(this.link);
 
         // 연관 엔티티 설정
         job.setCompany(company);
