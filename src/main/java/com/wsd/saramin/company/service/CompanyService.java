@@ -5,6 +5,8 @@ import com.wsd.saramin.bookmark.company.repository.CompanyBookmarkRepository;
 import com.wsd.saramin.company.dto.CompanyDTO;
 import com.wsd.saramin.company.entity.Company;
 import com.wsd.saramin.company.repository.CompanyRepository;
+import com.wsd.saramin.company.dto.CompanyReviewDTO; // 리뷰 DTO 추가
+import com.wsd.saramin.company.repository.CompanyReviewRepository; // 리뷰 Repository 추가
 import com.wsd.saramin.job.dto.JobSummaryDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +18,14 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final CompanyBookmarkRepository companyBookmarkRepository;
+    private final CompanyReviewRepository companyReviewRepository; // 추가
 
-    public CompanyService(CompanyRepository companyRepository, CompanyBookmarkRepository companyBookmarkRepository) {
+    public CompanyService(CompanyRepository companyRepository,
+                          CompanyBookmarkRepository companyBookmarkRepository,
+                          CompanyReviewRepository companyReviewRepository) {
         this.companyRepository = companyRepository;
         this.companyBookmarkRepository = companyBookmarkRepository;
+        this.companyReviewRepository = companyReviewRepository; // 추가
     }
 
     // 회사 정보 조회
@@ -36,7 +42,11 @@ public class CompanyService {
                 .map(CompanyBookmarkDTO::new) // CompanyBookmark -> CompanyBookmarkDTO 변환
                 .collect(Collectors.toList());
 
-        return new CompanyDTO(company, jobSummaries, companyBookmarks);
+        var companyReviews = companyReviewRepository.findByCompany(company).stream() // 추가
+                .map(CompanyReviewDTO::new) // CompanyReview -> CompanyReviewDTO 변환
+                .collect(Collectors.toList());
+
+        return new CompanyDTO(company, jobSummaries, companyBookmarks, companyReviews); // 4개 인자 전달
     }
 
     // 회사 정보 수정

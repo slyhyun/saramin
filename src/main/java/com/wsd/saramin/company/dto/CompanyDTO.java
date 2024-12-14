@@ -25,10 +25,10 @@ public class CompanyDTO {
     private long salary;
     private List<JobSummaryDTO> jobs; // 간소화된 Job 정보
     private List<CompanyBookmarkDTO> companyBookmarks; // Company 북마크 목록
-
+    private List<CompanyReviewDTO> companyReviews; // Company 리뷰 목록 추가
 
     // Entity => DTO 변환 생성자
-    public CompanyDTO(Company company, List<JobSummaryDTO> jobSummaryDTOs, List<CompanyBookmarkDTO> companyBookmarks) {
+    public CompanyDTO(Company company, List<JobSummaryDTO> jobSummaryDTOs, List<CompanyBookmarkDTO> companyBookmarks, List<CompanyReviewDTO> companyReviews) {
         this.companyId = company.getCompanyId();
         this.name = company.getName();
         this.type = company.getType();
@@ -43,5 +43,6 @@ public class CompanyDTO {
         this.salary = company.getSalary();
         this.jobs = jobSummaryDTOs; // JobSummaryDTO 리스트를 할당
         this.companyBookmarks = companyBookmarks;
+        this.companyReviews = companyReviews; // 리뷰 리스트를 할당
     }
 }

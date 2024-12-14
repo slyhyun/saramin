@@ -57,4 +57,7 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CompanyBookmark> companyBookmarks = new ArrayList<>(); // Company 북마크
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CompanyReview> companyReviews = new ArrayList<>(); // Company 리뷰
 }
