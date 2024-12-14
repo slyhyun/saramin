@@ -4,6 +4,8 @@ import com.wsd.saramin.apply.entity.Apply;
 import com.wsd.saramin.bookmark.company.entity.CompanyBookmark;
 import com.wsd.saramin.bookmark.job.entity.JobBookmark;
 import com.wsd.saramin.job.entity.Job;
+import com.wsd.saramin.job.entity.JobReview;
+import com.wsd.saramin.company.entity.CompanyReview;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +65,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CompanyBookmark> companyBookmarks = new ArrayList<>(); // Company 북마크
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobReview> jobReviews = new ArrayList<>(); // Job 리뷰 추가
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CompanyReview> companyReviews = new ArrayList<>(); // Company 리뷰 추가
 
     public enum Gender {
         MALE,
