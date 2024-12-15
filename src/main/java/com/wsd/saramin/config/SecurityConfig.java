@@ -2,14 +2,20 @@ package com.wsd.saramin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -28,14 +34,11 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/auth/**"
                         ).permitAll() // 인증 없이 접근 가능 경로
-                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                        .anyRequest().hasRole("MEMBER") // 나머지 요청은 ROLE_MEMBER 권한 필요
                 )
-                .formLogin(Customizer.withDefaults()) // 기본 로그인 페이지 사용
-                .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
-                        .logoutSuccessUrl("/auth/login?logout")
-                        .permitAll() // 로그아웃 후 성공 페이지
-                );
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // 커스텀 필터 추가
+                .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 비활성화
+                .formLogin(formLogin -> formLogin.disable()); // 기본 로그인 폼 비활성화
 
         return http.build();
     }
