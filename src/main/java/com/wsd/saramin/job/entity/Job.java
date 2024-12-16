@@ -81,4 +81,8 @@ public class Job {
             this.companyName = this.company.getName();
         }
     }
+
+    public void incrementView() {
+        this.view++;
+    }
 }

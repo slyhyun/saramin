@@ -6,9 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/jobs")
@@ -25,33 +28,46 @@ public class JobController {
             summary = "채용 공고 목록 조회",
             description = "채용 공고를 페이지네이션, 필터링, 정렬 옵션으로 조회합니다.",
             parameters = {
-                    @Parameter(name = "location", description = "채용 공고의 지역 필터", required = false),
-                    @Parameter(name = "experience", description = "경력 필터", required = false),
-                    @Parameter(name = "sector", description = "산업 섹터 필터", required = false),
-                    @Parameter(name = "keyword", description = "검색 키워드", required = false),
+                    @Parameter(name = "region", description = "채용 공고의 지역 필터", required = false),
+                    @Parameter(name = "experience", description = "채용 공고의 경력 필터", required = false),
+                    @Parameter(name = "sector", description = "채용 공고의 기술스택 필터", required = false),
+                    @Parameter(name = "title", description = "채용 공고 제목 검색", required = false),
+                    @Parameter(name = "companyName", description = "회사명 검색", required = false),
+                    @Parameter(name = "keyword", description = "키워드 검색", required = false),
+                    @Parameter(name = "sortBy", description = "정렬 기준 (view, date, apply)", required = false, example = "date"),
+                    @Parameter(name = "page", description = "조회할 페이지 번호 (1부터 시작)", required = false)
             }
     )
     @GetMapping
     public ResponseEntity<Page<JobDTO>> getJobs(
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String region,
             @RequestParam(required = false) String experience,
             @RequestParam(required = false) String sector,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String companyName,
             @RequestParam(required = false) String keyword,
-            Pageable pageable) {
-        Page<JobDTO> jobs = jobService.getJobs(location, experience, sector, keyword, pageable);
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        int pageIndex = page - 1; // Spring Data JPA는 0-based index 사용
+        Pageable pageable = PageRequest.of(pageIndex, 20, jobService.getSort(sortBy));
+        Page<JobDTO> jobs = jobService.getJobs(region, experience, sector, title, companyName, keyword, pageable);
         return ResponseEntity.ok(jobs);
     }
 
     @Operation(
             summary = "채용 공고 상세 조회",
-            description = "특정 ID를 가진 채용 공고의 상세 정보를 조회합니다.",
+            description = "특정 ID를 가진 채용 공고의 상세 정보를 조회하고, 조회수를 증가시키며 관련 공고를 추천합니다.",
             parameters = @Parameter(name = "id", description = "조회할 채용 공고의 ID", required = true)
     )
     @GetMapping("/{id}")
     public ResponseEntity<JobDTO> getJobById(@PathVariable long id) {
-        JobDTO job = jobService.getJobById(id);
+        JobDTO job = jobService.getJobByIdAndIncrementView(id); // 조회수 증가 로직 포함
+        List<JobDTO> relatedJobs = jobService.getRelatedJobs(job.getSector()); // 관련 공고 추천
+        job.setRelatedJobs(relatedJobs); // JobDTO에 관련 공고 추가
         return ResponseEntity.ok(job);
     }
+
 
     @Operation(
             summary = "채용 공고 등록",

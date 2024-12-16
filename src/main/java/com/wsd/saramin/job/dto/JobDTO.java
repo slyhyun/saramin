@@ -32,6 +32,9 @@ public class JobDTO {
     private List<JobBookmarkDTO> jobBookmarks; // Job 북마크 목록
     private List<JobReviewDTO> jobReviews; // Job 리뷰 목록 추가
 
+    // 새로운 필드: 관련 공고 목록
+    private List<JobDTO> relatedJobs;
+
     // Entity → DTO 변환 생성자
     public JobDTO(Job job, List<ApplyDTO> applyDTOs, List<JobBookmarkDTO> jobBookmarkDTOs, List<JobReviewDTO> jobReviewDTOs) {
         this.jobId = job.getJobId();
