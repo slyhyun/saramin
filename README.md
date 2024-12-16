@@ -2,12 +2,12 @@
 
 채용 정보를 제공하는 Backend 서버입니다. 
 Jupyter Notebook과 Python을 사용하여 데이터를 크롤링한 후 MySQL을 사용하여 DB를 구축했습니다. 
-그 후 Spring Boot를 사용하여 서버를 구축했습니다.
+그 후 Spring Boot와 JCloud를 사용하여 서버를 구축했습니다.
 
 ## 📋 프로젝트 기본 정보
 
 - **프로젝트명**: saramin
-- **목적**: 크롤링 데이터를 활용하여 DB 구축 후 채용 정보를 제공하는 서버 구축
+- **목적**: 크롤링 데이터를 활용하여 채용 정보를 제공하는 서버 구축
 - **주요 기능**:
     - 로그인 및 회원가입 기능
     - 프로필, 토큰 재발급 기능
@@ -19,11 +19,11 @@ Jupyter Notebook과 Python을 사용하여 데이터를 크롤링한 후 MySQL�
 
 ## 🛠 기술 스택
 
-- **백엔드**: Spring boot
+- **백엔드**: Spring Boot
 - **크롤링**: Python, Jupyter Notebook
 - **데이터베이스**: MySQL
 - **API**: Swagger
-- **서버**: Jcloud
+- **서버**: JCloud
 
 ## 🚀 설치 및 실행 가이드
 
@@ -62,19 +62,14 @@ saramin/
 │   │   ├── job                    # 채용
 │   │   ├── user                   # 유저
 │   │   └── util                   # 유틸
-│   ├── resources                  
-│   │   └── application.properties # 프로젝트 정보
-│   └── pages
-│       ├── Main                   # 메인 페이지
-│       ├── Popular                # 인기 콘텐츠 페이지
-│       ├── Search                 # 콘텐츠 검색 페이지
-│       ├── Signin                 # 로그인 페이지
-│       └── Wishlist               # 위시리스트 페이지  
+│   └── resources                  
+│       └── application.properties # 프로젝트 정보
+│ 
 │── build.gradle                   # 패키지 파일                       
 └── README.md                      # 프로젝트 설명 파일
 ```
 ## 📝  API
----
+
 ### 1.UserController
 
 #### 회원가입 (POST /auth/register)
@@ -128,16 +123,16 @@ title, location, experience, type, education, deadline, sector, companyName, lin
 채용 공고를 삭제합니다.
 
 ---
-## 3.CompanyController
+### 3.CompanyController
 
 #### 회사 정보 조회 (GET /company/{id})
-companyId, name, type, employee, industry, ceo, website, description, address, establishment, revenue, salaty, jobs, companyBookmarks, companyReviews가 반환됩니다.
+companyId, name, type, employee, industry, ceo, website, description, address, establishment, revenue, salary, jobs, companyBookmarks, companyReviews가 반환됩니다.
 
 #### 회사 정보 수정 (PUT /company/{id})
 name, type, employee, industry, ceo, website, description, address, establishment, revenue, salary를 입력하여 수정합니다.
 
 ---
-## 4.BookmarksController
+### 4.BookmarksController
 
 #### Job 북마크 조회 (GET /bookmarks/jobs)
 id, userId, jobId, date가 반환됩니다.
@@ -152,7 +147,7 @@ Job 북마크가 등록, 삭제됩니다.
 Company 북마크가 등록, 삭제됩니다.
 
 ---
-## 5.JobReviewController
+### 5.JobReviewController
 
 #### 채용 공고 리뷰 조회 (GET /jobs/{jobID}/reviews)
 jobReviewId, jobId, userId, userName, content, date가 반환됩니다.
@@ -164,7 +159,7 @@ content를 입력하여 등록합니다.
 리뷰가 삭제됩니다.
 
 ---
-## 6.JobReviewController
+### 6.JobReviewController
 
 #### 회사 정보 리뷰 조회 (GET /companies/{companyID}/reviews)
 companyReviewId, companyId, userId, userName, content, date가 반환됩니다.
@@ -176,7 +171,7 @@ content를 입력하여 등록합니다.
 리뷰가 삭제됩니다.
 
 ---
-## 5.ApplyController
+### 5.ApplyController
 
 #### 지원 내역 조회 (GET /applications)
 applyId, userID, jobID, jobTitle, applyDate, status가 반환됩니다.
