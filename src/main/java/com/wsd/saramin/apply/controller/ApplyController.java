@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -24,17 +25,18 @@ public class ApplyController {
     @PostMapping
     public ResponseEntity<String> apply(
             @Parameter(description = "지원자의 사용자 ID") @RequestParam Long userId,
-            @Parameter(description = "지원할 공고 ID") @RequestParam Long jobId
-    ) {
+            @Parameter(description = "지원할 공고 ID") @RequestParam Long jobId) {
         applyService.apply(userId, jobId);
         return ResponseEntity.ok("지원이 완료되었습니다.");
     }
 
-    @Operation(summary = "지원 내역 조회", description = "특정 사용자의 모든 지원 내역을 조회합니다.")
+    @Operation(summary = "지원 내역 조회", description = "특정 사용자의 지원 내역을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<ApplyDTO>> getApplications(
-            @Parameter(description = "사용자 ID") @RequestParam Long userId) {
-        List<ApplyDTO> applications = applyService.getApplies(userId);
+            @Parameter(description = "사용자 ID") @RequestParam Long userId,
+            @Parameter(description = "지원 상태 필터 (PENDING, APPROVED, CANCELLED)") @RequestParam(required = false) String status,
+            @Parameter(description = "페이지 번호 (기본값: 1)") @RequestParam(defaultValue = "1") String page) {
+        List<ApplyDTO> applications = applyService.getApplies(userId, status, page);
         return ResponseEntity.ok(applications);
     }
 

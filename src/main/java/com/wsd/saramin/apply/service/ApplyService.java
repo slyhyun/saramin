@@ -1,12 +1,16 @@
 package com.wsd.saramin.apply.service;
 
+import com.wsd.saramin.job.entity.Job;
+import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.apply.dto.ApplyDTO;
 import com.wsd.saramin.apply.entity.Apply;
+import com.wsd.saramin.apply.entity.Apply.Status;
 import com.wsd.saramin.apply.repository.ApplyRepository;
-import com.wsd.saramin.job.entity.Job;
 import com.wsd.saramin.job.repository.JobRepository;
-import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,17 +43,42 @@ public class ApplyService {
         Apply apply = new Apply();
         apply.setUser(user);
         apply.setJob(job);
-        apply.setStatus(Apply.Status.PENDING);
+        apply.setStatus(Status.PENDING);
 
         applyRepository.save(apply);
     }
 
-    // 사용자별 지원 내역 조회
+    // 사용자별 지원 내역 조회 (페이지네이션 및 상태별 필터링)
     @Transactional(readOnly = true)
-    public List<ApplyDTO> getApplies(Long userId) {
+    public List<ApplyDTO> getApplies(Long userId, String status, String page) {
         User user = findUserById(userId);
 
-        return applyRepository.findAllByUser(user).stream()
+        int pageNumber;
+        try {
+            pageNumber = Integer.parseInt(page) - 1; // 1-based index를 0-based index로 변환
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("페이지 번호는 숫자여야 합니다.");
+        }
+
+        // 페이지네이션 설정 (기본 20개, 최신순 정렬)
+        Pageable pageable = PageRequest.of(pageNumber, 20, Sort.by(Sort.Direction.DESC, "date"));
+
+        if (status != null) {
+            Status applyStatus;
+            try {
+                applyStatus = Status.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("유효하지 않은 상태 값입니다: " + status);
+            }
+
+            return applyRepository.findAllByUserAndStatus(user, applyStatus, pageable)
+                    .stream()
+                    .map(ApplyDTO::new)
+                    .collect(Collectors.toList());
+        }
+
+        return applyRepository.findAllByUser(user, pageable)
+                .stream()
                 .map(ApplyDTO::new)
                 .collect(Collectors.toList());
     }
@@ -60,11 +89,11 @@ public class ApplyService {
         Apply apply = applyRepository.findById(applyId)
                 .orElseThrow(() -> new IllegalArgumentException("지원 내역을 찾을 수 없습니다."));
 
-        if (apply.getStatus() != Apply.Status.PENDING) {
+        if (apply.getStatus() != Status.PENDING) {
             throw new IllegalArgumentException("취소할 수 없는 상태입니다.");
         }
 
-        apply.setStatus(Apply.Status.CANCELLED);
+        apply.setStatus(Status.CANCELLED);
         applyRepository.save(apply);
     }
 
