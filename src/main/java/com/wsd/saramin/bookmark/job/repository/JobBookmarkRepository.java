@@ -1,8 +1,11 @@
 package com.wsd.saramin.bookmark.job.repository;
 
+import com.wsd.saramin.bookmark.company.entity.CompanyBookmark;
 import com.wsd.saramin.bookmark.job.entity.JobBookmark;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.job.entity.Job;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +17,8 @@ public interface JobBookmarkRepository extends JpaRepository<JobBookmark, Long> 
     boolean existsByUserAndJob(User user, Job job);
     List<JobBookmark> findByUser(User user);
     List<JobBookmark> findByJob(Job job);
+
+    Page<JobBookmark> findByUser(User user, Pageable pageable);
 
     @Modifying
     @Transactional

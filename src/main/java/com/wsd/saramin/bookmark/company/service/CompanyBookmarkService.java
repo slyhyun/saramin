@@ -7,6 +7,9 @@ import com.wsd.saramin.company.entity.Company;
 import com.wsd.saramin.company.repository.CompanyRepository;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,13 +47,17 @@ public class CompanyBookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public List<CompanyBookmarkDTO> getBookmarks(Long userId) {
+    public List<CompanyBookmarkDTO> getBookmarks(Long userId, int page) {
         User user = findUserById(userId);
 
-        return companyBookmarkRepository.findByUser(user).stream()
+        // 페이지네이션 및 정렬 설정
+        Pageable pageable = PageRequest.of(page - 1, 20, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        return companyBookmarkRepository.findByUser(user, pageable).stream()
                 .map(CompanyBookmarkDTO::new)
                 .collect(Collectors.toList());
     }
+
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)

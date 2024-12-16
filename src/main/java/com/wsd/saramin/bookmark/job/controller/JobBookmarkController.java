@@ -30,10 +30,12 @@ public class JobBookmarkController {
         return ResponseEntity.ok("북마크 상태가 변경되었습니다.");
     }
 
-    @Operation(summary = "사용자의 Job 북마크 조회", description = "특정 사용자의 Job 북마크 목록을 조회합니다.")
+    @Operation(summary = "사용자의 Job 북마크 조회", description = "특정 사용자의 Job 북마크 목록을 페이지네이션 및 정렬 기준으로 조회합니다.")
     @GetMapping
     public ResponseEntity<List<JobBookmarkDTO>> getJobBookmarks(
-            @Parameter(description = "사용자 ID") @RequestParam Long userId) {
-        return ResponseEntity.ok(jobBookmarkService.getJobBookmarks(userId));
+            @Parameter(description = "사용자 ID") @RequestParam Long userId,
+            @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") int page) {
+        List<JobBookmarkDTO> bookmarks = jobBookmarkService.getJobBookmarks(userId, page);
+        return ResponseEntity.ok(bookmarks);
     }
 }

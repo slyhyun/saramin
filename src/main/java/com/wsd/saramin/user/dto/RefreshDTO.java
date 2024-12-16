@@ -1,5 +1,6 @@
 package com.wsd.saramin.user.dto;
 
+
 public class RefreshDTO {
 
     private String refreshToken;

@@ -7,6 +7,9 @@ import com.wsd.saramin.job.entity.Job;
 import com.wsd.saramin.job.repository.JobRepository;
 import com.wsd.saramin.user.entity.User;
 import com.wsd.saramin.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +45,13 @@ public class JobBookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public List<JobBookmarkDTO> getJobBookmarks(Long userId) {
+    public List<JobBookmarkDTO> getJobBookmarks(Long userId, int page) {
         User user = findUserById(userId);
 
-        return jobBookmarkRepository.findByUser(user).stream()
+        // 페이지네이션 및 정렬 설정
+        Pageable pageable = PageRequest.of(page - 1, 20, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        return jobBookmarkRepository.findByUser(user, pageable).stream()
                 .map(JobBookmarkDTO::new)
                 .collect(Collectors.toList());
     }
