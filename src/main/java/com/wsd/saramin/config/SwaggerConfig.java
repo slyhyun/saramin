@@ -24,7 +24,7 @@ public class SwaggerConfig {
                                 .email("support@saramin.com")))
                 .servers(List.of(
                         new Server().url("http://localhost:80").description("로컬 환경"),
-                        new Server().url("https://113.198.66.75:18209").description("외부 환경")
+                        new Server().url("http://113.198.66.75:18209").description("외부 환경")
                 ));
     }
 }
